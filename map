@@ -1,0 +1,87 @@
+#include<stdio.h>
+#include <stdlib.h>
+#include <time.h>
+#include <Windows.h>
+#include <conio.h>
+
+#define VERTICAL 10
+#define HORIZONTAL 10
+
+int stage = 0;
+int mapnum = 0;
+int map[10][10] =
+{
+	{1,1,1,1,1,1,1,1,1,1},
+	{1,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,1},
+	{1,0,0,0,0,0,0,0,0,1},
+	{1,1,1,1,1,1,1,1,1,1},
+	
+};
+int i, j;
+
+int playerX = 2;
+int playerY = 1;
+
+void mapf();
+void player_to_map();
+
+main()
+{
+	player_to_map();
+}
+
+void mapf()
+{
+	system("cls");
+	for (i = 0; i < VERTICAL; i++)
+	{
+		for (j = 0; j < HORIZONTAL; j++)
+		{
+			if (map[i][j] == 0)
+			{
+				printf("□");
+			}
+			else if (map[i][j] == 1)
+			{
+				printf("■");
+			}
+			else if (map[i][j] == 2)
+			{
+				printf("ㆎ");
+			}
+			else if (map[i][j] == 3)
+			{
+				printf("★");
+			}
+			else if (map[i][j] == 4)
+			{
+				printf("↑");
+			}
+			else if (map[i][j] == 5)
+			{
+				printf("→");
+			}
+			else if (map[i][j] == 6)
+			{
+				printf("↓");
+			}
+			else if (map[i][j] == 7)
+			{
+				printf("←");
+			}
+		}
+		printf("\n");
+	}
+}
+
+void player_to_map()
+{
+	map[playerY][playerX] = 3;
+	mapf();
+}
