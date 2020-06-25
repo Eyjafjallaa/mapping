@@ -1,39 +1,65 @@
 #include<stdio.h>
-#include <stdlib.h>
-#include <time.h>
+//#include <stdlib.h>
+//#include <time.h>
 #include <Windows.h>
 #include <conio.h>
 
 #define VERTICAL 10
 #define HORIZONTAL 10
 
-int stage = 0;
-int mapnum = 0;
+int stage[3][10] = 
+{
+	{0,3,0,0,8,14,4,0,0,0},
+	{2,15,9,14,12,13,0,8,9,4},
+	{0,5,9,7,0,5,9,7,0,0}
+};
+//스테이지 좌표
+int stageX = 0;
+int stageY = 1;
+
+//맵의 기본 모양
 int map[10][10] =
 {
-	{1,1,1,1,1,1,1,1,1,1},
+	{1,1,1,1,1,1,1,1,4,1},
+	{7,0,0,0,0,0,0,0,0,1},
 	{1,0,0,0,0,0,0,0,0,1},
 	{1,0,0,0,0,0,0,0,0,1},
 	{1,0,0,0,0,0,0,0,0,1},
 	{1,0,0,0,0,0,0,0,0,1},
 	{1,0,0,0,0,0,0,0,0,1},
 	{1,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,1},
-	{1,0,0,0,0,0,0,0,0,1},
-	{1,1,1,1,1,1,1,1,1,1},
-	
+	{1,0,0,0,0,0,0,0,0,5},
+	{1,6,1,1,1,1,1,1,1,1},	
 };
 int i, j;
 
-int playerX = 2;
-int playerY = 1;
+int playerX = 5;
+int playerY = 5;
+
+int key = 0;
 
 void mapf();
-void player_to_map();
+void player_to_map();	//기본적인 맵표시
+
+void start();					//시작시 행동
+
+int moving();					//움직임
+void movecheck();			//움직임후처리
+
+void mapupdate();			//맵 위치에 맞는 맵을 로딩
+
+void mapup();
+void mapdown();
+void mapleft();
+void mapright();
 
 main()
 {
-	player_to_map();
+	start();
+	while (1)
+	{
+		movecheck();
+	}
 }
 
 void mapf()
@@ -84,4 +110,277 @@ void player_to_map()
 {
 	map[playerY][playerX] = 3;
 	mapf();
+}
+
+void start()
+{
+	mapupdate();
+	player_to_map();
+	mapf();
+}
+
+//움직인 곳에 있는 옵젝값 리턴
+int moving()
+{
+	char mchecker;
+	mchecker = _getch();
+	if (mchecker == -32)
+	{
+		mchecker = _getch();
+		map[playerY][playerX] = 0;
+		if (mchecker == 75)//왼쪽
+		{
+			if (playerX > 0)
+			{
+				if (map[playerY][playerX - 1] == 0)
+				{
+					playerX--;
+					player_to_map();
+					return 0;
+				}
+				else if (map[playerY][playerX - 1] == 1)
+				{
+					player_to_map();
+					return 1;
+				}
+				else if (map[playerY][playerX - 1] == 2)
+				{
+					playerX--;
+					player_to_map();
+					return 2;
+				}
+				//좌향문
+				else if (map[playerY][playerX - 1] == 7)
+				{
+					return 7;
+				}
+			}
+		}
+		else if (mchecker == 80)//아래
+		{
+			if (playerY < 9)
+			{
+				if (map[playerY+1][playerX] == 0)
+				{
+					playerY++;
+					player_to_map();
+					return 0;
+				}
+				else if (map[playerY+1][playerX] == 1)
+				{
+					player_to_map();
+					return 1;
+				}
+				else if (map[playerY+1][playerX] == 2)
+				{
+					playerY++;
+					player_to_map();
+					return 2;
+				}
+				//하향문
+				else if (map[playerY+1][playerX] == 6)
+				{
+					return 6;
+				}
+			}
+		}
+		else if (mchecker == 77)//오른쪽
+		{
+			if (playerX < 9)
+			{
+				if (map[playerY][playerX + 1] == 0)
+				{
+					playerX++;
+					player_to_map();
+					return 0;
+				}
+				else if (map[playerY][playerX + 1] == 1)
+				{
+					player_to_map();
+					return 1;
+				}
+				else if (map[playerY][playerX + 1] == 2)
+				{
+					playerX++;
+					player_to_map();
+					return 2;
+				}
+				//우향문
+				else if (map[playerY][playerX + 1] == 5)
+				{
+					return 5;
+				}
+			}
+		}
+		else if (mchecker == 72)//위
+		{
+			if (playerY > 0)
+			{
+				if (map[playerY - 1][playerX] == 0)
+				{
+					playerY--;
+					player_to_map();
+					return 0;
+				}
+				else if (map[playerY - 1][playerX] == 1)
+				{
+					player_to_map();
+					return 1;
+				}
+				else if (map[playerY - 1][playerX] == 2)
+				{
+					playerY--;
+					player_to_map();
+					return 2;
+				}
+				//상향문
+				else if (map[playerY - 1][playerX] == 4)
+				{
+					return 4;
+				}
+			}
+		}
+	}
+	else
+	{
+		return 0;
+	}
+	return 0;
+}
+
+//함수 불러서 처리
+void movecheck()
+{
+	switch (moving())
+	{
+	case 2:
+		break;
+	case 4:
+		mapup();
+		break;
+	case 5:
+		mapright();
+		break;
+	case 6:
+		mapdown();
+		break;
+	case 7:
+		mapleft();
+		break;
+	}
+}
+
+void mapupdate()
+{
+	for (i = 0; i < HORIZONTAL; i++)
+	{
+		map[i][0] = 1;
+		map[i][9] = 1;
+		map[0][i] = 1;
+		map[9][i] = 1;
+	}
+	switch (stage[stageY][stageX])
+	{
+	case 0:
+		break;
+	case 1:
+		map[0][8] = 4;
+		break;
+	case 2:
+		map[8][9] = 5;
+		break;
+	case 3:
+		map[9][1] = 6;
+		break;
+	case 4:
+		map[1][0] = 7;
+		break;
+	case 5:
+		map[0][8] = 4;
+		map[8][9] = 5;
+		break;
+	case 6:
+		map[0][8] = 4;
+		map[9][1] = 6;
+		break;
+	case 7:
+		map[0][8] = 4;
+		map[1][0] = 7;
+		break;
+	case 8:
+		map[8][9] = 5;
+		map[9][1] = 6;
+		break;
+	case 9:
+		map[8][9] = 5;
+		map[1][0] = 7;
+		break;
+	case 10:
+		map[9][1] = 6;
+		map[1][0] = 7;
+		break;
+	case 11:
+		map[0][8] = 4;
+		map[8][9] = 5;
+		map[9][1] = 6;
+		break;
+	case 12:
+		map[0][8] = 4;
+		map[8][9] = 5;
+		map[1][0] = 7;
+		break;
+	case 13:
+		map[0][8] = 4;
+		map[9][1] = 6;
+		map[1][0] = 7;
+		break;
+	case 14:
+		map[8][9] = 5;
+		map[9][1] = 6;
+		map[1][0] = 7;
+		break;
+	case 15:
+		map[0][8] = 4;
+		map[8][9] = 5;
+		map[9][1] = 6;
+		map[1][0] = 7;
+		break;
+	}
+}
+
+void mapup()
+{
+	map[playerY][playerX] = 0;
+	stageY--;
+	mapupdate();
+	playerX = 1;
+	playerY = 8;
+	player_to_map();
+}
+void mapright()
+{
+	map[playerY][playerX] = 0;
+	stageX++;
+	mapupdate();
+	playerX = 1;
+	playerY = 1;
+	player_to_map();
+}
+void mapdown()
+{
+	map[playerY][playerX] = 0;
+	stageY++;
+	mapupdate();
+	playerX = 8;
+	playerY = 1;
+	player_to_map();
+}
+void mapleft()
+{
+	map[playerY][playerX] = 0;
+	stageX--;
+	mapupdate();
+	playerX = 8;
+	playerY = 8;
+	player_to_map();
 }
