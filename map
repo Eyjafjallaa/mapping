@@ -17,9 +17,9 @@ int stage[3][10] =
 */
 int stage[3][10] =
 {
-	{0,0,0,0,0,0,0,0,0,0},
+	{0,1,0,0,0,0,0,0,0,0},
 	{1,1,1,1,1,1,1,1,1,1},
-	{0,0,0,0,0,0,0,0,0,0}
+	{0,1,0,0,0,0,0,0,0,0}
 };
 
 //스테이지 좌표
@@ -334,23 +334,22 @@ void mapupdate()
 		map[0][i] = 1;
 		map[9][i] = 1;
 	}
-	if (stage[stageY-1][stageX] == 1 && stageY != 0)//상향문
+	if ((stage[stageY-1][stageX] == 1) && (stageY > 0))//상향문
 	{
 		map[0][8] = 4;
 	}
-	if (stage[stageY][stageX + 1] == 1 && stageY != 9)//우향문
+	if ((stage[stageY][stageX + 1] == 1) && (stageX < 9))//우향문
 	{
 		map[8][9] = 5;
 	}
-	if (stage[stageY + 1][stageX] == 1 && stageY != 9)//하향문
+	if ((stage[stageY + 1][stageX] == 1) && (stageY < 2))//하향문
 	{
 		map[9][1] = 6;
 	}
-	if (stage[stageY][stageX - 1] == 1 && stageX != 0)//좌향문
+	if ((stage[stageY][stageX - 1] == 1) &&( stageX > 0))//좌향문
 	{
 		map[1][0] = 7;
 	}
-
 }
 
 void mapup()
