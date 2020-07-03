@@ -7,12 +7,21 @@
 #define VERTICAL 10
 #define HORIZONTAL 10
 
+/*
 int stage[3][10] = 
 {
-	{0,3,0,0,8,14,4,0,0,0},
-	{2,15,9,14,12,13,0,8,9,4},
-	{0,5,9,7,0,5,9,7,0,0}
+	{0,1,0,0,1,1,1,0,0,0},
+	{1,1,1,1,1,1,0,1,1,1},
+	{0,1,1,1,0,1,1,1,0,0}
 };
+*/
+int stage[3][10] =
+{
+	{0,0,0,0,0,0,0,0,0,0},
+	{1,1,1,1,1,1,1,1,1,1},
+	{0,0,0,0,0,0,0,0,0,0}
+};
+
 //스테이지 좌표
 int stageX = 0;
 int stageY = 1;
@@ -83,7 +92,7 @@ int randomf()
 	return random;
 }
 
-void mapf()	
+void mapf()		
 {
 	system("cls");
 	for (i = 0; i < VERTICAL; i++)
@@ -325,73 +334,23 @@ void mapupdate()
 		map[0][i] = 1;
 		map[9][i] = 1;
 	}
-	switch (stage[stageY][stageX])
+	if (stage[stageY-1][stageX] == 1 && stageY != 0)//상향문
 	{
-	case 0:
-		break;
-	case 1:
 		map[0][8] = 4;
-		break;
-	case 2:
-		map[8][9] = 5;
-		break;
-	case 3:
-		map[9][1] = 6;
-		break;
-	case 4:
-		map[1][0] = 7;
-		break;
-	case 5:
-		map[0][8] = 4;
-		map[8][9] = 5;
-		break;
-	case 6:
-		map[0][8] = 4;
-		map[9][1] = 6;
-		break;
-	case 7:
-		map[0][8] = 4;
-		map[1][0] = 7;
-		break;
-	case 8:
-		map[8][9] = 5;
-		map[9][1] = 6;
-		break;
-	case 9:
-		map[8][9] = 5;
-		map[1][0] = 7;
-		break;
-	case 10:
-		map[9][1] = 6;
-		map[1][0] = 7;
-		break;
-	case 11:
-		map[0][8] = 4;
-		map[8][9] = 5;
-		map[9][1] = 6;
-		break;
-	case 12:
-		map[0][8] = 4;
-		map[8][9] = 5;
-		map[1][0] = 7;
-		break;
-	case 13:
-		map[0][8] = 4;
-		map[9][1] = 6;
-		map[1][0] = 7;
-		break;
-	case 14:
-		map[8][9] = 5;
-		map[9][1] = 6;
-		map[1][0] = 7;
-		break;
-	case 15:
-		map[0][8] = 4;
-		map[8][9] = 5;
-		map[9][1] = 6;
-		map[1][0] = 7;
-		break;
 	}
+	if (stage[stageY][stageX + 1] == 1 && stageY != 9)//우향문
+	{
+		map[8][9] = 5;
+	}
+	if (stage[stageY + 1][stageX] == 1 && stageY != 9)//하향문
+	{
+		map[9][1] = 6;
+	}
+	if (stage[stageY][stageX - 1] == 1 && stageX != 0)//좌향문
+	{
+		map[1][0] = 7;
+	}
+
 }
 
 void mapup()
