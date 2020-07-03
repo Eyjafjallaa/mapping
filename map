@@ -8,7 +8,7 @@
 #define HORIZONTAL 10
 
 /*
-int stage[3][10] = 
+int stage[3][10] =	 
 {
 	{0,1,0,0,1,1,1,0,0,0},
 	{1,1,1,1,1,1,0,1,1,1},
@@ -17,9 +17,9 @@ int stage[3][10] =
 */
 int stage[3][10] =
 {
-	{0,1,0,0,0,0,0,0,0,0},
-	{1,1,1,1,1,1,1,1,1,1},
-	{0,1,0,0,0,0,0,0,0,0}
+	{0,1,0,1,0,0,0,0,0,0},
+	{1,1,1,1,1,1,0,1,1,1},
+	{0,0,0,1,0,0,0,0,0,0}
 };
 
 //스테이지 좌표
@@ -334,21 +334,96 @@ void mapupdate()
 		map[0][i] = 1;
 		map[9][i] = 1;
 	}
-	if ((stage[stageY-1][stageX] == 1) && (stageY > 0))//상향문
+	//2번쨰줄들 다 고쳐
+	if ((stage[stageY][stageX] == 1))
 	{
+		if ((stage[stageY - 1][stageX] == 1) && (stageY > 0))//상향문 
+		{
+			map[0][8] = 4;
+		}
+		if ((stage[stageY - 1][stageX] == 6) || (stage[stageY - 1][stageX] == 8) || (stage[stageY - 1][stageX] == 10) || (stage[stageY - 1][stageX] == 11) || (stage[stageY - 1][stageX] == 13) || (stage[stageY - 1][stageX] == 14) || (stage[stageY - 1][stageX] == 15))
+		{
+			map[0][8] = 4;
+		}
+		if ((stage[stageY][stageX + 1] == 1) && (stageX < 9))//우향문
+		{
+			map[8][9] = 5;
+		}
+		if ((stage[stageY][stageX + 1] == 5) || (stage[stageY][stageX + 1] == 8) || (stage[stageY][stageX + 1] == 9) || (stage[stageY][stageX + 1] == 11) || (stage[stageY][stageX + 1] == 12) || (stage[stageY][stageX + 1] == 14) || (stage[stageY][stageX + 1] == 15))
+		{
+			map[8][9] = 5;
+		}
+		if ((stage[stageY + 1][stageX] == 1) && (stageY < 2))//하향문
+		{
+			map[9][1] = 6;
+		}
+		if ((stage[stageY + 1][stageX] == 5) || (stage[stageY + 1][stageX] == 6) || (stage[stageY + 1][stageX] == 7) || (stage[stageY + 1][stageX] == 11) || (stage[stageY + 1][stageX] == 12) || (stage[stageY + 1][stageX] == 13) || (stage[stageY + 1][stageX] == 15))
+		{
+			map[9][1] = 6;
+		}
+		if ((stage[stageY][stageX - 1] == 1) && (stageX > 0))//좌향문
+		{
+			map[1][0] = 7;
+		}
+		if ((stage[stageY][stageX - 1] == 7) || (stage[stageY][stageX - 1] == 9) || (stage[stageY][stageX - 1] == 10) || (stage[stageY][stageX - 1] == 12) || (stage[stageY][stageX - 1] == 13) || (stage[stageY][stageX - 1] == 14) || (stage[stageY][stageX - 1] == 15))
+		{
+			map[1][0] = 7;
+		}
+	}
+	switch (stage[stageY][stageX])
+	{
+	case 5:
 		map[0][8] = 4;
-	}
-	if ((stage[stageY][stageX + 1] == 1) && (stageX < 9))//우향문
-	{
 		map[8][9] = 5;
-	}
-	if ((stage[stageY + 1][stageX] == 1) && (stageY < 2))//하향문
-	{
+		break;
+	case 6:
+		map[0][8] = 4;
 		map[9][1] = 6;
-	}
-	if ((stage[stageY][stageX - 1] == 1) &&( stageX > 0))//좌향문
-	{
+		break;
+	case 7:
+		map[0][8] = 4;
 		map[1][0] = 7;
+		break;
+	case 8:
+		map[8][9] = 5;
+		map[9][1] = 6;
+		break;
+	case 9:
+		map[8][9] = 5;
+		map[1][0] = 7;
+		break;
+	case 10:
+		map[9][1] = 6;
+		map[1][0] = 7;
+		break;
+	case 11:
+		map[0][8] = 4;
+		map[8][9] = 5;
+		map[9][1] = 6;
+		break;
+	case 12:
+		map[0][8] = 4;
+		map[8][9] = 5;
+		map[1][0] = 7;
+		break;
+	case 13:
+		map[0][8] = 4;
+		map[9][1] = 6;
+		map[1][0] = 7;
+		break;
+	case 14:
+		map[8][9] = 5;
+		map[9][1] = 6;
+		map[1][0] = 7;
+		break;
+	case 15:
+		map[0][8] = 4;
+		map[8][9] = 5;
+		map[9][1] = 6;
+		map[1][0] = 7;
+		break;
+	default:
+		break;
 	}
 }
 
@@ -431,6 +506,10 @@ redo:
 		{
 			stopcounter--;
 			goto redo;
+		}
+		if (mch == 'a')
+		{
+			break;
 		}
 	}
 }
