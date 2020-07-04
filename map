@@ -6,6 +6,8 @@
 
 #define VERTICAL 10
 #define HORIZONTAL 10
+#define TRUE 1
+#define FALSE 0
 
 /*
 int stage[3][10] =	 
@@ -17,8 +19,8 @@ int stage[3][10] =
 */
 int stage[3][10] =
 {
-	{0,1,0,1,0,0,0,0,0,0},
-	{1,1,1,1,1,1,0,1,1,1},
+	{0,1,9,1,0,0,0,0,0,0},
+	{1,1,1,1,1,1,1,1,1,1},
 	{0,0,0,1,0,0,0,0,0,0}
 };
 
@@ -45,11 +47,12 @@ int i, j;
 int playerX = 5;
 int playerY = 5;
 
-int key = 0;
+int key = FALSE;
 int keyX;
 int keyY;
 
-int stopcounter;
+int stopcounter = FALSE;
+int gameover = FALSE;
 
 void mapf();
 void player_to_map();	//기본적인 맵표시
@@ -72,15 +75,7 @@ void keymake();				//열쇠제작
 void test1();
 
 
-
-
-
-
 void main(){test1();}
-
-
-
-
 
 
 int randomf()
@@ -113,11 +108,11 @@ void mapf()
 			}
 			else if (map[i][j] == 3)
 			{
-				if (key == 0)
+				if (key == FALSE)
 				{
 					printf("☆");
 				}
-				else if(key ==1 )
+				else if(key == TRUE)
 				{
 					printf("★");
 				}
@@ -138,6 +133,10 @@ void mapf()
 			{
 				printf("←");
 			}
+			else if (map[i][j] == 10)
+			{
+				printf("×");
+			}
 		}
 		printf("\n");
 	}
@@ -153,6 +152,7 @@ void start()
 	mapupdate();
 	player_to_map();
 	keymake();
+	mapf();
 }
 
 //움직인 곳에 있는 옵젝값 리턴
@@ -192,6 +192,11 @@ int moving()
 				{
 					return 7;
 				}
+				//가시
+				else if (map[playerY][playerX - 1] == 10)
+				{
+					return 10;
+				}
 			}
 		}
 		else if (mchecker == 80)//아래
@@ -221,6 +226,11 @@ int moving()
 				else if (map[playerY+1][playerX] == 6)
 				{
 					return 6;
+				}
+				//가시
+				else if (map[playerY + 1][playerX] == 10)
+				{
+					return 10;
 				}
 			}
 		}
@@ -252,6 +262,11 @@ int moving()
 				{
 					return 5;
 				}
+				//가시
+				else if (map[playerY][playerX + 1] == 10)
+				{
+					return 10;
+				}
 			}
 		}
 		else if (mchecker == 72)//위
@@ -282,12 +297,17 @@ int moving()
 				{
 					return 4;
 				}
+				//가시
+				else if (map[playerY - 1][playerX] == 10)
+				{
+					return 10;
+				}
 			}
 		}
 	}
 	else if (mchecker == 27)
 	{
-	stopcounter++;
+	stopcounter = TRUE;
 	}
 	else
 	{
@@ -302,31 +322,34 @@ void movecheck()
 	switch (moving())
 	{
 	case 2:
-		key = 1;
+		key = TRUE;
 		mapf();
 		break;
 	case 4:
-		if (key==1)
+		if (key == TRUE)
 		mapup();
 		break;
 	case 5:
-		if (key==1)
+		if (key==TRUE)
 		mapright();
 		break;
 	case 6:
-		if (key==1)
+		if (key==TRUE)
 		mapdown();
 		break;
 	case 7:
-		if(key==1)
+		if(key==TRUE)
 		mapleft();
+		break;
+	case 10:
+		gameover = TRUE;
 		break;
 	}
 }
 
 void mapupdate()
 {
-	key = 0;
+	key = FALSE;
 	for (i = 0; i < HORIZONTAL; i++)
 	{
 		map[i][0] = 1;
@@ -490,26 +513,30 @@ void keymake()
 void test1()
 {
 	start();
-redo:
-	mapf();
-	while (stopcounter % 2 == 0)
+	map[3][3] = 10;//확인용 코드
+	while (gameover == FALSE)
 	{
-		movecheck();
+		while (stopcounter == FALSE && gameover == FALSE)
+		{
+			movecheck();
+		}
+		if (stopcounter == TRUE)
+		{
+			system("cls");
+			printf("pause");
+			char mch;
+			while (stopcounter == TRUE)
+			{
+				mch = _getch();
+				if (mch == 27)
+				{
+					stopcounter = FALSE;
+					mapf();
+				}
+			}
+		}
 	}
 	system("cls");
-	printf("일시정지");
-	char mch;
-	while (1)
-	{
-		mch = _getch();
-		if (mch == 27)
-		{
-			stopcounter--;
-			goto redo;
-		}
-		if (mch == 'a')
-		{
-			break;
-		}
-	}
+	printf("gameover");
+	return;
 }
