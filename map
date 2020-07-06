@@ -6,6 +6,7 @@
 
 #define VERTICAL 10
 #define HORIZONTAL 10
+
 #define TRUE 1
 #define FALSE 0
 
@@ -51,6 +52,9 @@ int key = FALSE;
 int keyX;
 int keyY;
 
+int trapX;
+int trapY;
+
 int stopcounter = FALSE;
 int gameover = FALSE;
 
@@ -71,6 +75,7 @@ void mapleft();
 void mapright();
 
 void keymake();				//열쇠제작
+void trapmake();			//즉사장판제작
 
 void test1();
 
@@ -82,7 +87,7 @@ int randomf()
 {
 	srand(time(NULL));
 	int random = 0;
-	random = rand() % 8 + 1;
+	random = rand();
 	//printf("%d\n",random);
 	return random;
 }
@@ -147,11 +152,16 @@ void player_to_map()
 	map[playerY][playerX] = 3;
 }
 
-void start()
+void start()//맵바꿀때 쓰는 함수
 {
 	mapupdate();
 	player_to_map();
 	keymake();
+	if (map[trapY][trapX] == 10)
+	{
+		map[trapY][trapX] = 0;
+	}
+	trapmake();
 	mapf();
 }
 
@@ -192,7 +202,7 @@ int moving()
 				{
 					return 7;
 				}
-				//가시
+				//즉사장판
 				else if (map[playerY][playerX - 1] == 10)
 				{
 					return 10;
@@ -227,7 +237,7 @@ int moving()
 				{
 					return 6;
 				}
-				//가시
+				//즉사장판
 				else if (map[playerY + 1][playerX] == 10)
 				{
 					return 10;
@@ -262,7 +272,7 @@ int moving()
 				{
 					return 5;
 				}
-				//가시
+				//즉사장판
 				else if (map[playerY][playerX + 1] == 10)
 				{
 					return 10;
@@ -297,7 +307,7 @@ int moving()
 				{
 					return 4;
 				}
-				//가시
+				//즉사장판
 				else if (map[playerY - 1][playerX] == 10)
 				{
 					return 10;
@@ -364,7 +374,7 @@ void mapupdate()
 		{
 			map[0][8] = 4;
 		}
-		if ((stage[stageY - 1][stageX] == 6) || (stage[stageY - 1][stageX] == 8) || (stage[stageY - 1][stageX] == 10) || (stage[stageY - 1][stageX] == 11) || (stage[stageY - 1][stageX] == 13) || (stage[stageY - 1][stageX] == 14) || (stage[stageY - 1][stageX] == 15))
+		if ((stage[stageY - 1][stageX] == 6) || (stage[stageY - 1][stageX] == 8) || (stage[stageY - 1][stageX] == 10) || (stage[stageY - 1][stageX] == 11) || (stage[stageY - 1][stageX] == 13) || (stage[stageY - 1][stageX] == 14) || (stage[stageY - 1][stageX] == 15) && (stageY > 0))
 		{
 			map[0][8] = 4;
 		}
@@ -372,7 +382,7 @@ void mapupdate()
 		{
 			map[8][9] = 5;
 		}
-		if ((stage[stageY][stageX + 1] == 5) || (stage[stageY][stageX + 1] == 8) || (stage[stageY][stageX + 1] == 9) || (stage[stageY][stageX + 1] == 11) || (stage[stageY][stageX + 1] == 12) || (stage[stageY][stageX + 1] == 14) || (stage[stageY][stageX + 1] == 15))
+		if ((stage[stageY][stageX + 1] == 5) || (stage[stageY][stageX + 1] == 8) || (stage[stageY][stageX + 1] == 9) || (stage[stageY][stageX + 1] == 11) || (stage[stageY][stageX + 1] == 12) || (stage[stageY][stageX + 1] == 14) || (stage[stageY][stageX + 1] == 15) && (stageX < 9))
 		{
 			map[8][9] = 5;
 		}
@@ -380,7 +390,7 @@ void mapupdate()
 		{
 			map[9][1] = 6;
 		}
-		if ((stage[stageY + 1][stageX] == 5) || (stage[stageY + 1][stageX] == 6) || (stage[stageY + 1][stageX] == 7) || (stage[stageY + 1][stageX] == 11) || (stage[stageY + 1][stageX] == 12) || (stage[stageY + 1][stageX] == 13) || (stage[stageY + 1][stageX] == 15))
+		if ((stage[stageY + 1][stageX] == 5) || (stage[stageY + 1][stageX] == 6) || (stage[stageY + 1][stageX] == 7) || (stage[stageY + 1][stageX] == 11) || (stage[stageY + 1][stageX] == 12) || (stage[stageY + 1][stageX] == 13) || (stage[stageY + 1][stageX] == 15) && (stageY < 2))
 		{
 			map[9][1] = 6;
 		}
@@ -388,7 +398,7 @@ void mapupdate()
 		{
 			map[1][0] = 7;
 		}
-		if ((stage[stageY][stageX - 1] == 7) || (stage[stageY][stageX - 1] == 9) || (stage[stageY][stageX - 1] == 10) || (stage[stageY][stageX - 1] == 12) || (stage[stageY][stageX - 1] == 13) || (stage[stageY][stageX - 1] == 14) || (stage[stageY][stageX - 1] == 15))
+		if ((stage[stageY][stageX - 1] == 7) || (stage[stageY][stageX - 1] == 9) || (stage[stageY][stageX - 1] == 10) || (stage[stageY][stageX - 1] == 12) || (stage[stageY][stageX - 1] == 13) || (stage[stageY][stageX - 1] == 14) || (stage[stageY][stageX - 1] == 15) && (stageX > 0))
 		{
 			map[1][0] = 7;
 		}
@@ -454,66 +464,68 @@ void mapup()
 {
 	map[playerY][playerX] = 0;
 	stageY--;
-	mapupdate();
 	playerX = 1;
 	playerY = 8;
-	player_to_map();
-	keymake();
-	mapf();
+	start();
 }
 void mapright()
 {
 	map[playerY][playerX] = 0;
 	stageX++;
-	mapupdate();
 	playerX = 1;
 	playerY = 1;
-	player_to_map();
-	keymake();
-	mapf();
+	start();
 }
 void mapdown()
 {
 	map[playerY][playerX] = 0;
 	stageY++;
-	mapupdate();
 	playerX = 8;
 	playerY = 1;
-	player_to_map();
-	keymake();
-	mapf();
+	start();
 }
 void mapleft()
 {
 	map[playerY][playerX] = 0;
 	stageX--;
-	mapupdate();
 	playerX = 8;
 	playerY = 8;
-	player_to_map();
-	keymake();
-	mapf();
+	start();
 }
+
+
 
 void keymake()
 {
 	while (1)
 	{
-		keyX = randomf();
-		keyY = randomf();
+		keyX = randomf() % 8 + 1;
+		keyY = randomf() % 8 + 1;
 		if (map[keyY][keyX] == 0)
 		{
 			map[keyY][keyX] = 2;
 			break;
 		}
 	}
-}
+} 
 
+void trapmake()
+{
+	while (1)
+	{
+		trapX = randomf() % 8 + 1;
+		trapY = randomf() % 8 + 1;
+		if (map[trapY][trapX] == 0 && map[trapY - 1][trapX] != 4 && map[trapY][trapX + 1] != 5 && map[trapY + 1][trapX] != 6 && map[trapY][trapX - 1] != 7)
+		{
+			map[trapY][trapX] = 10;
+			break;
+		}
+	}
+}
 
 void test1()
 {
 	start();
-	map[3][3] = 10;//확인용 코드
 	while (gameover == FALSE)
 	{
 		while (stopcounter == FALSE && gameover == FALSE)
