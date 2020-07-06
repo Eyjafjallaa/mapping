@@ -80,15 +80,20 @@ void trapmake();			//즉사장판제작
 void test1();
 
 
+
 void main(){test1();}
+
+
 
 
 int randomf()
 {
-	srand(time(NULL));
+	static int a = 0;
+	srand(time(NULL) + a);
 	int random = 0;
 	random = rand();
 	//printf("%d\n",random);
+	a++;
 	return random;
 }
 
@@ -499,8 +504,8 @@ void keymake()
 {
 	while (1)
 	{
-		keyX = randomf() % 8 + 1;
-		keyY = randomf() % 8 + 1;
+		keyX = (randomf() * randomf()) % 8 + 1;
+		keyY =  randomf() % 8 + 1;
 		if (map[keyY][keyX] == 0)
 		{
 			map[keyY][keyX] = 2;
@@ -514,7 +519,7 @@ void trapmake()
 	while (1)
 	{
 		trapX = randomf() % 8 + 1;
-		trapY = randomf() % 8 + 1;
+		trapY = (randomf() * randomf()) % 8 + 1;
 		if (map[trapY][trapX] == 0 && map[trapY - 1][trapX] != 4 && map[trapY][trapX + 1] != 5 && map[trapY + 1][trapX] != 6 && map[trapY][trapX - 1] != 7)
 		{
 			map[trapY][trapX] = 10;
